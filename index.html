@@ -144,40 +144,14 @@
             font-size: 1.3em;
         }
 
-        .qualification {
-            font-size: 0.9em;
-            padding: 5px 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
-
-        .qualification.valid {
-            color: #2f855a;
-        }
-
-        .qualification.expired {
-            color: #c53030;
-            text-decoration: line-through;
-        }
-
-        .qualification.warning {
-            color: #dd6b20;
-        }
-
-        .qualification::before {
-            content: "✓";
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .qualification.expired::before {
-            content: "✗";
-        }
-
-        .qualification.warning::before {
-            content: "⚠";
-        }
+    .qualification {
+        font-size: 0.9em;
+        padding: 5px 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: #2d3748; /* Tutte uguali! */
+    }
 
         .machine-slot {
             background: white;
@@ -422,48 +396,48 @@
     <script>
         // Dati operatori
         const operators = [
-            {
-                id: 'mario',
-                name: 'Mario Rossi',
-                qualifications: [
-                    { text: 'Escavatori idraulici < 20 ton', valid: true, expires: '15/03/2030' },
-                    { text: 'Pale caricatrici frontali', valid: true, expires: '15/03/2030' },
-                    { text: 'Gru mobili autocarrate', valid: false, expires: '10/11/2024 (SCADUTO)', expired: true }
-                ]
-            },
-            {
-                id: 'luca',
-                name: 'Luca Bianchi',
-                qualifications: [
-                    { text: 'PLE con stabilizzatori', valid: true, expires: '20/06/2028' },
-                    { text: 'Carrelli elevatori frontali', valid: true, expires: '20/06/2028' }
-                ]
-            },
-            {
-                id: 'giuseppe',
-                name: 'Giuseppe Verdi',
-                qualifications: [
-                    { text: 'Gru a torre a rotazione in basso', valid: true, expires: '12/01/2029' },
-                    { text: 'Aggiornamento quinquennale: NON EFFETTUATO', valid: false, warning: true, expires: '(scaduto da 6 mesi)' }
-                ]
-            },
-            {
-                id: 'anna',
-                name: 'Anna Neri',
-                qualifications: [
-                    { text: 'Escavatori idraulici > 20 ton', valid: true, expires: '05/09/2029' },
-                    { text: 'Terne', valid: true, expires: '05/09/2029' }
-                ]
-            },
-            {
-                id: 'paolo',
-                name: 'Paolo Gialli',
-                qualifications: [
-                    { text: 'PLE senza stabilizzatori', valid: true, expires: '18/12/2027' },
-                    { text: 'Carrelli elevatori semoventi a braccio telescopico', valid: true, expires: '18/12/2027' }
-                ]
-            }
-        ];
+    {
+        id: 'mario',
+        name: 'Mario Rossi',
+        qualifications: [
+            { text: 'Escavatori idraulici < 20 ton', expires: '15/03/2030' },
+            { text: 'Pale caricatrici frontali', expires: '15/03/2030' },
+            { text: 'Gru mobili autocarrate', expires: '10/11/2024' } // Scaduto ma non dichiarato!
+        ]
+    },
+    {
+        id: 'luca',
+        name: 'Luca Bianchi',
+        qualifications: [
+            { text: 'PLE con stabilizzatori', expires: '20/06/2028' },
+            { text: 'Carrelli elevatori frontali', expires: '20/06/2028' }
+        ]
+    },
+    {
+        id: 'giuseppe',
+        name: 'Giuseppe Verdi',
+        qualifications: [
+            { text: 'Gru a torre a rotazione in basso', expires: '12/01/2029' },
+            { text: 'Aggiornamento quinquennale', expires: '15/05/2024' } // Scaduto!
+        ]
+    },
+    {
+        id: 'anna',
+        name: 'Anna Neri',
+        qualifications: [
+            { text: 'Escavatori idraulici > 20 ton', expires: '05/09/2029' },
+            { text: 'Terne', expires: '05/09/2029' }
+        ]
+    },
+    {
+        id: 'paolo',
+        name: 'Paolo Gialli',
+        qualifications: [
+            { text: 'PLE senza stabilizzatori', expires: '18/12/2027' },
+            { text: 'Carrelli elevatori semoventi a braccio telescopico', expires: '18/12/2027' }
+        ]
+    }
+];
 
         // Dati macchine
         const machines = [
@@ -510,19 +484,19 @@
         }
 
         // Renderizza operatori
-        function renderOperators() {
-            const container = document.getElementById('operatorsList');
-            container.innerHTML = operators.map(op => `
-                <div class="operator-card" draggable="true" data-operator-id="${op.id}">
-                    <div class="operator-name">${op.name}</div>
-                    ${op.qualifications.map(q => `
-                        <div class="qualification ${q.expired ? 'expired' : q.warning ? 'warning' : 'valid'}">
-                            ${q.text}${q.expires ? ` - Scad. ${q.expires}` : ''}
-                        </div>
-                    `).join('')}
+       function renderOperators() {
+    const container = document.getElementById('operatorsList');
+    container.innerHTML = operators.map(op => `
+        <div class="operator-card" draggable="true" data-operator-id="${op.id}">
+            <div class="operator-name">${op.name}</div>
+            ${op.qualifications.map(q => `
+                <div class="qualification">
+                    ${q.text} - Scad. ${q.expires}
                 </div>
-            `).join('');
-        }
+            `).join('')}
+        </div>
+    `).join('');
+}
 
         // Renderizza macchine
         function renderMachines() {
